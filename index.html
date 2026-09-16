@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>NAMO - Movies</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #eef2f5;
+            color: #222;
+        }
+
+        header {
+            background: #0878d1;
+            padding: 14px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .top {
+            max-width: 1200px;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            color: #ff9800;
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        #search {
+            flex: 1;
+            padding: 12px;
+            border: 0;
+            border-radius: 7px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 18px;
+        }
+
+        .notice {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 5px solid #0878d1;
+        }
+
+        .categories {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 15px;
+        }
+
+        .categories button {
+            border: 0;
+            padding: 9px 15px;
+            border-radius: 20px;
+            background: white;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .categories button.active {
+            background: #0878d1;
+            color: white;
+        }
+
+        h2 {
+            margin-top: 10px;
+        }
+
+        #movies {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+        }
+
+        .movie {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,.1);
+        }
+
+        .movie img {
+            width: 100%;
+            height: 270px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .movie-info {
+            padding: 12px;
+        }
+
+        .movie h3 {
+            margin: 0 0 7px;
+            font-size: 17px;
+        }
+
+        .meta {
+            color: #777;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .watch {
+            display: block;
+            text-align: center;
+            background: #0878d1;
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 6px;
+        }
+
+        #message {
+            text-align: center;
+            padding: 30px;
+        }
+
+        @media (max-width: 900px) {
+            #movies {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .top {
+                flex-wrap: wrap;
+            }
+
+            .logo {
+                width: 100%;
+            }
+
+            #movies {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
+            .movie img {
+                height: 230px;
+            }
+
+            .movie-info {
+                padding: 9px;
+            }
+
+            .movie h3 {
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="top">
+
+        <div class="logo">NAMO</div>
+
+        <input
+            id="search"
+            type="search"
+            placeholder="Search movies..."
+        >
+
+    </div>
+</header>
+
+
+<div class="container">
+
+    <div class="notice">
+        🎬 Welcome to <b>NAMO</b> — Movies & Entertainment
+    </div>
+
+
+    <div class="categories">
+
+        <button class="active" data-category="All">
+            All
+        </button>
+
+        <button data-category="Action">
+            Action
+        </button>
+
+        <button data-category="Comedy">
+            Comedy
+        </button>
+
+        <button data-category="Drama">
+            Drama
+        </button>
+
+        <button data-category="Romance">
+            Romance
+        </button>
+
+        <button data-category="Thriller">
+            Thriller
+        </button>
+
+        <button data-category="Animation">
+            Animation
+        </button>
+
+    </div>
+
+
+    <h2>🎬 Latest Movies</h2>
+
+    <div id="message">
+        Loading movies...
+    </div>
+
+    <div id="movies"></div>
+
+</div>
+
+
+<script>
+
+let allMovies = [];
+
+let selectedCategory = "All";
+
+
+const moviesBox =
+    document.getElementById("movies");
+
+const message =
+    document.getElementById("message");
+
+const search =
+    document.getElementById("search");
+
+
+// Load movies
+async function loadMovies() {
+
+    try {
+
+        const response =
+            await fetch("/api/movies");
+
+        if (!response.ok) {
+            throw new Error("Server error");
+        }
+
+        allMovies =
+            await response.json();
+
+        showMovies();
+
+    } catch (error) {
+
+        message.style.display = "block";
+
+        message.textContent =
+            "❌ Movies load nahi ho rahi hain. Server check karo.";
+
+    }
+}
+
+
+// Display movies
+function showMovies() {
+
+    moviesBox.innerHTML = "";
+
+    const searchText =
+        search.value.toLowerCase().trim();
+
+
+    const filtered =
+        allMovies.filter(movie => {
+
+            const title =
+                (movie.title || "").toLowerCase();
+
+            const category =
+                movie.category || "";
+
+
+            const matchesSearch =
+                title.includes(searchText);
+
+            const matchesCategory =
+                selectedCategory === "All" ||
+                category === selectedCategory;
+
+
+            return matchesSearch &&
+                   matchesCategory;
+        });
+
+
+    if (filtered.length === 0) {
+
+        message.style.display = "block";
+
+        message.textContent =
+            "😕 Koi movie nahi mili.";
+
+        return;
+
+    }
+
+
+    message.style.display = "none";
+
+
+    filtered.forEach(movie => {
+
+        const card =
+            document.createElement("div");
+
+        card.className = "movie";
+
+
+        const image =
+            document.createElement("img");
+
+        image.src = movie.posterUrl;
+
+        image.alt = movie.title;
+
+
+        const info =
+            document.createElement("div");
+
+        info.className = "movie-info";
+
+
+        const title =
+            document.createElement("h3");
+
+        title.textContent =
+            movie.title;
+
+
+        const meta =
+            document.createElement("div");
+
+        meta.className = "meta";
+
+        meta.textContent =
+            `${movie.category || "Movie"} • ${movie.year || ""}`;
+
+
+        const watch =
+            document.createElement("a");
+
+        watch.className = "watch";
+
+        watch.textContent =
+            "▶ Watch Now";
+
+        watch.href =
+            "movie.html?id=" +
+            encodeURIComponent(movie.id);
+
+
+        info.appendChild(title);
+
+        info.appendChild(meta);
+
+        info.appendChild(watch);
+
+        card.appendChild(image);
+
+        card.appendChild(info);
+
+        moviesBox.appendChild(card);
+
+    });
+}
+
+
+// Search
+search.addEventListener(
+    "input",
+    showMovies
+);
+
+
+// Category
+document
+    .querySelectorAll(".categories button")
+    .forEach(button => {
+
+        button.addEventListener(
+            "click",
+            function() {
+
+                document
+                    .querySelectorAll(".categories button")
+                    .forEach(btn =>
+                        btn.classList.remove("active")
+                    );
+
+                this.classList.add("active");
+
+                selectedCategory =
+                    this.dataset.category;
+
+                showMovies();
+
+            }
+        );
+
+    });
+
+
+loadMovies();
+
+</script>
+
+</body>
+</html>

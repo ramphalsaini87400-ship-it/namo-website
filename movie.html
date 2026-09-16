@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>NAMO - Watch Movie</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: white;
+        }
+
+        header {
+            background: #0878d1;
+            padding: 14px 18px;
+        }
+
+        .header-inner {
+            max-width: 1100px;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            color: #ff9800;
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .home {
+            color: white;
+            text-decoration: none;
+            background: rgba(255,255,255,.15);
+            padding: 9px 14px;
+            border-radius: 6px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .player {
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        video {
+            width: 100%;
+            max-height: 650px;
+            display: block;
+            background: #000;
+        }
+
+        .details {
+            margin-top: 20px;
+            background: #1d1d1d;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .movie-title {
+            font-size: 28px;
+            margin: 0 0 10px;
+        }
+
+        .meta {
+            color: #aaa;
+            margin-bottom: 15px;
+        }
+
+        .description {
+            color: #ddd;
+            line-height: 1.6;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 7px;
+            font-weight: bold;
+        }
+
+        .download {
+            background: #ff9800;
+            color: #111;
+        }
+
+        .back {
+            background: #0878d1;
+            color: white;
+        }
+
+        #message {
+            text-align: center;
+            padding: 50px 10px;
+            color: #ccc;
+        }
+
+        @media (max-width: 600px) {
+
+            .container {
+                padding: 10px;
+            }
+
+            .movie-title {
+                font-size: 22px;
+            }
+
+            .details {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+
+    <div class="header-inner">
+
+        <div class="logo">
+            NAMO
+        </div>
+
+        <a href="index.html" class="home">
+            🏠 Home
+        </a>
+
+    </div>
+
+</header>
+
+
+<div class="container">
+
+    <div id="message">
+        Loading movie...
+    </div>
+
+
+    <div id="moviePage" style="display:none;">
+
+        <div class="player">
+
+            <video
+                id="video"
+                controls
+                playsinline
+                preload="metadata"
+            ></video>
+
+        </div>
+
+
+        <div class="details">
+
+            <h1
+                id="title"
+                class="movie-title"
+            ></h1>
+
+
+            <div
+                id="meta"
+                class="meta"
+            ></div>
+
+
+            <p
+                id="description"
+                class="description"
+            ></p>
+
+
+            <div class="buttons">
+
+                <a
+                    id="download"
+                    class="btn download"
+                    href="#"
+                    download
+                >
+                    ⬇️ Download
+                </a>
+
+
+                <a
+                    href="index.html"
+                    class="btn back"
+                >
+                    🏠 Back to Home
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const message =
+    document.getElementById("message");
+
+const moviePage =
+    document.getElementById("moviePage");
+
+const video =
+    document.getElementById("video");
+
+const title =
+    document.getElementById("title");
+
+const meta =
+    document.getElementById("meta");
+
+const description =
+    document.getElementById("description");
+
+const download =
+    document.getElementById("download");
+
+
+async function loadMovie() {
+
+    try {
+
+        const params =
+            new URLSearchParams(
+                window.location.search
+            );
+
+        const id =
+            params.get("id");
+
+
+        if (!id) {
+
+            throw new Error(
+                "Movie ID missing"
+            );
+        }
+
+
+        const response =
+            await fetch(
+                "/api/movies/" +
+                encodeURIComponent(id)
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Movie not found"
+            );
+        }
+
+
+        const movie =
+            await response.json();
+
+
+        title.textContent =
+            movie.title || "Untitled";
+
+
+        meta.textContent =
+            `${movie.category || "Movie"} • ${movie.year || ""}`;
+
+
+        description.textContent =
+            movie.description ||
+            "No description available.";
+
+
+        video.src =
+            movie.videoUrl;
+
+
+        download.href =
+            movie.videoUrl;
+
+
+        message.style.display =
+            "none";
+
+
+        moviePage.style.display =
+            "block";
+
+    }
+
+    catch (error) {
+
+        message.textContent =
+            "❌ Movie load nahi ho paayi.";
+
+    }
+
+}
+
+
+loadMovie();
+
+</script>
+
+</body>
+</html>

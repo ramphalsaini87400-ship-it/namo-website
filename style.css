@@ -1,0 +1,165 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #eeeeee;
+    color: #222;
+}
+
+/* HEADER */
+.header {
+    background: #056b96;
+    text-align: center;
+    padding: 12px 8px;
+}
+
+.logo {
+    font-size: 42px;
+    font-weight: 900;
+    color: #ff9d00;
+    letter-spacing: 4px;
+}
+
+.tagline {
+    color: white;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+/* SEARCH */
+.search-box {
+    background: #08759e;
+    padding: 9px;
+    display: flex;
+    gap: 5px;
+}
+
+.search-box input {
+    flex: 1;
+    height: 42px;
+    border: 2px solid #ccc;
+    padding: 8px 12px;
+    font-size: 16px;
+    outline: none;
+}
+
+.search-box button {
+    width: 90px;
+    border: none;
+    background: white;
+    color: #222;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 3px;
+}
+
+/* NOTICE */
+.notice {
+    background: #fff3c4;
+    border: 2px solid #e5c84b;
+    padding: 13px 8px;
+    text-align: center;
+    color: #a51616;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* SECTION */
+.section-title {
+    background: #dcebf4;
+    border-top: 1px solid #aaa;
+    border-bottom: 1px solid #aaa;
+    padding: 11px 5px;
+    text-align: center;
+    color: #08658d;
+    font-size: 21px;
+    font-weight: bold;
+    margin-top: 8px;
+}
+
+/* MOVIE CARD */
+.movie-card {
+    background: white;
+    margin: 7px;
+    padding: 10px;
+    display: flex;
+    gap: 12px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+.poster {
+    width: 105px;
+    height: 135px;
+    object-fit: cover;
+    border-radius: 5px;
+    background: #ddd;
+    flex-shrink: 0;
+}
+
+.movie-info {
+    flex: 1;
+}
+
+.movie-title {
+    font-size: 20px;
+    line-height: 1.2;
+    font-weight: bold;
+    color: #126d2a;
+    margin-bottom: 9px;
+}
+
+.category {
+    display: inline-block;
+    background: #168b35;
+    color: white;
+    padding: 5px 11px;
+    border-radius: 18px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.watch-btn {
+    display: inline-block;
+    margin-top: 10px;
+    background: #075f91;
+    color: white;
+    padding: 7px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* FOOTER */
+footer {
+    background: #075f91;
+    color: white;
+    text-align: center;
+    padding: 22px 10px;
+    margin-top: 15px;
+}
+
+/* MOBILE */
+@media (max-width: 500px) {
+
+    .logo {
+        font-size: 36px;
+    }
+
+    .movie-title {
+        font-size: 18px;
+    }
+
+    .poster {
+        width: 95px;
+        height: 125px;
+    }
+
+    .section-title {
+        font-size: 19px;
+    }
+}
