@@ -380,10 +380,46 @@
 
   // Like
 
-  document.getElementById("likeBtn")
-    .addEventListener("click", function() {
+  // Like
+document.getElementById("likeBtn")
+  .addEventListener("click", async function() {
 
-      this.classList.toggle("liked");
+    if (!movieData || !movieData.id) return;
+
+    const response = await fetch(
+      `/api/movies/${movieData.id}/like`,
+      { method: "POST" }
+    );
+
+    const data = await response.json();
+
+    if (response.ok) {
+      document.getElementById("likeCount").textContent =
+        data.likes;
+      this.classList.add("liked");
+    }
+  });
+
+
+// Dislike
+document.getElementById("dislikeBtn")
+  .addEventListener("click", async function() {
+
+    if (!movieData || !movieData.id) return;
+
+    const response = await fetch(
+      `/api/movies/${movieData.id}/dislike`,
+      { method: "POST" }
+    );
+
+    const data = await response.json();
+
+    if (response.ok) {
+      document.getElementById("dislikeCount").textContent =
+        data.dislikes;
+      this.classList.add("liked");
+    }
+  });
 
     });
 

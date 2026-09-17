@@ -145,6 +145,60 @@ app.get("/api/movies/:id", (req, res) => {
     res.json(movie);
 });
 
+// =============================
+// LIKE / DISLIKE API
+// =============================
+
+app.post("/api/movies/:id/like", (req, res) => {
+    const movies = getMovies();
+
+    const index = movies.findIndex(
+        m => m.id === req.params.id
+    );
+
+    if (index === -1) {
+        return res.status(404).json({
+            error: "Movie not found"
+        });
+    }
+
+    movies[index].likes =
+        Number(movies[index].likes) || 0;
+
+    movies[index].likes++;
+
+    saveMovies(movies);
+
+    res.json({
+        likes: movies[index].likes
+    });
+});
+
+
+app.post("/api/movies/:id/dislike", (req, res) => {
+    const movies = getMovies();
+
+    const index = movies.findIndex(
+        m => m.id === req.params.id
+    );
+
+    if (index === -1) {
+        return res.status(404).json({
+            error: "Movie not found"
+        });
+    }
+
+    movies[index].dislikes =
+        Number(movies[index].dislikes) || 0;
+
+    movies[index].dislikes++;
+
+    saveMovies(movies);
+
+    res.json({
+        dislikes: movies[index].dislikes
+    });
+});
 
 // =============================
 // ADMIN LOGIN CHECK
