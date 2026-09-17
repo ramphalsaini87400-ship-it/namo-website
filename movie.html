@@ -14,17 +14,17 @@
     }
 
     body {
-      background: #0f0f0f;
-      color: white;
       font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      color: #111;
     }
 
     header {
-      height: 60px;
-      background: #0756d9;
+      background: #0757b8;
+      color: white;
+      padding: 14px 20px;
       display: flex;
       align-items: center;
-      padding: 0 18px;
       justify-content: space-between;
     }
 
@@ -36,436 +36,567 @@
 
     .home-btn {
       background: white;
-      color: #0756d9;
+      color: #0757b8;
       border: none;
-      padding: 9px 16px;
-      border-radius: 7px;
+      padding: 9px 15px;
+      border-radius: 6px;
+      cursor: pointer;
       font-weight: bold;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 20px auto;
+      padding: 0 15px;
+    }
+
+    #loading {
+      text-align: center;
+      padding: 60px 10px;
+      font-size: 20px;
+    }
+
+    #errorBox {
+      display: none;
+      text-align: center;
+      padding: 60px 10px;
+      font-size: 20px;
+    }
+
+    .movie-player {
+      background: #000;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .namo-player {
+      position: relative;
+      width: 100%;
+      background: #000;
+    }
+
+    .namo-player video {
+      width: 100%;
+      height: auto;
+      max-height: 650px;
+      display: block;
+      background: #000;
+    }
+
+    .center-play {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 65px;
+      height: 65px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
       cursor: pointer;
     }
 
-    main {
-      max-width: 1100px;
-      margin: auto;
+    .player-controls {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 10px;
+      background: linear-gradient(transparent, rgba(0,0,0,.9));
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .player-controls button {
+      background: transparent;
+      border: none;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 6px;
+    }
+
+    #timeText {
+      color: white;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    #seekBar {
+      flex: 1;
+      cursor: pointer;
+    }
+
+    .details {
+      background: white;
+      margin-top: 15px;
       padding: 20px;
-    }
-
-    .player-box {
-      background: #000;
-      width: 100%;
       border-radius: 10px;
-      overflow: hidden;
     }
 
-    video {
-      width: 100%;
-      display: block;
-      max-height: 650px;
-      background: #000;
+    .details h1 {
+      margin-bottom: 8px;
+      font-size: 25px;
+    }
+
+    .meta {
+      color: #666;
+      margin-bottom: 15px;
+    }
+
+    .description {
+      line-height: 1.6;
+      color: #333;
     }
 
     .action-bar {
       display: flex;
-      align-items: center;
       gap: 10px;
       flex-wrap: wrap;
-      margin-top: 14px;
+      margin-top: 18px;
     }
 
     .action-btn {
-      background: #242424;
-      color: white;
       border: none;
-      padding: 11px 16px;
-      border-radius: 22px;
+      padding: 10px 16px;
+      border-radius: 7px;
       cursor: pointer;
-      font-size: 15px;
+      background: #0757b8;
+      color: white;
+      font-weight: bold;
     }
 
-    .action-btn:hover {
-      background: #333;
+    .action-btn.liked {
+      background: #168f45;
     }
 
-    .liked {
-      background: #0756d9;
-    }
-
-    .download-box {
+    .download-area {
       position: relative;
     }
 
     .download-menu {
       display: none;
       position: absolute;
-      top: 48px;
-      right: 0;
-      background: #242424;
-      min-width: 170px;
-      border-radius: 8px;
-      overflow: hidden;
+      left: 0;
+      top: 45px;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 7px;
+      min-width: 150px;
       z-index: 20;
+      box-shadow: 0 5px 15px rgba(0,0,0,.15);
     }
 
     .download-menu button {
       width: 100%;
       border: none;
-      background: #242424;
-      color: white;
-      padding: 13px;
+      background: white;
+      padding: 11px;
       text-align: left;
       cursor: pointer;
     }
 
     .download-menu button:hover {
-      background: #333;
+      background: #f1f1f1;
     }
 
-    .quality-box {
-      margin-left: auto;
-    }
-
-    select {
-      background: #242424;
-      color: white;
-      border: none;
-      padding: 11px 14px;
-      border-radius: 20px;
-      outline: none;
-    }
-
-    .details {
-      margin-top: 20px;
-      background: #181818;
-      padding: 20px;
-      border-radius: 10px;
-    }
-
-    .title {
-      font-size: 26px;
-      font-weight: bold;
-      margin-bottom: 8px;
-    }
-
-    .meta {
-      color: #aaa;
-      margin-bottom: 15px;
-    }
-
-    .description {
-      color: #ddd;
-      line-height: 1.6;
-    }
-
-    .loading {
-      text-align: center;
-      padding: 50px 20px;
-    }
-
-    .error {
-      text-align: center;
-      padding: 50px 20px;
-      color: #ff6b6b;
+    .quality-select {
+      padding: 9px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
     }
 
     @media (max-width: 600px) {
-      main {
-        padding: 10px;
+      header {
+        padding: 12px 15px;
       }
 
-      .title {
-        font-size: 21px;
+      .logo {
+        font-size: 24px;
       }
 
-      .quality-box {
-        margin-left: 0;
-      }
+      .container {
+        margin-top: 12
 
-      .action-btn {
-        padding: 10px 13px;
-      }
-    }
   </style>
 </head>
 
 <body>
 
-<header>
-  <div class="logo">NAMO</div>
-  <button class="home-btn" onclick="location.href='index.html'">
-    Home
-  </button>
-</header>
+  <header>
+    <div class="logo">NAMO</div>
+    <button class="home-btn" onclick="location.href='index.html'">
+      🏠 Home
+    </button>
+  </header>
 
-<main>
+  <main class="container">
 
-  <div id="loading" class="loading">
-    Loading movie...
-  </div>
-
-  <div id="moviePage" style="display:none;">
-
-    <div class="player-box">
-      <video id="videoPlayer" controls playsinline></video>
+    <div id="loading">
+      🎬 Loading movie...
     </div>
 
-    <div class="action-bar">
-
-      <button id="likeBtn" class="action-btn">
-        👍 Like <span id="likeCount">0</span>
+    <div id="errorBox">
+      ❌ Movie not found.
+      <br><br>
+      <button class="action-btn" onclick="location.href='index.html'">
+        Back to Home
       </button>
+    </div>
 
-      <button id="dislikeBtn" class="action-btn">
-        👎 Dislike <span id="dislikeCount">0</span>
-      </button>
+    <div id="moviePage" style="display:none;">
 
-      <div class="download-box">
+      <div class="movie-player">
+        <div class="namo-player" id="namoPlayer">
 
-        <button id="downloadBtn" class="action-btn">
-          ⬇ Download
-        </button>
+          <video id="videoPlayer" playsinline></video>
 
-        <div id="downloadMenu" class="download-menu">
+          <div class="center-play" id="centerPlay">▶</div>
 
-          <button onclick="downloadMovie('1080p')">
-            HD 1080p
+          <div class="player-controls">
+            <button id="playBtn">▶</button>
+            <button id="backBtn">↶ 10</button>
+            <button id="forwardBtn">10 ↷</button>
+
+            <span id="timeText">0:00 / 0:00</span>
+
+            <input
+              type="range"
+              id="seekBar"
+              min="0"
+              max="100"
+              value="0"
+            >
+
+            <button id="muteBtn">🔊</button>
+            <button id="fullscreenBtn">⛶</button>
+          </div>
+
+        </div>
+      </div>
+
+      <section class="details">
+
+        <h1 id="movieTitle">Movie</h1>
+
+        <div class="meta" id="movieMeta">
+          Movie
+        </div>
+
+        <p class="description" id="movieDescription">
+          Description
+        </p>
+
+        <div class="action-bar">
+
+          <button class="action-btn" id="likeBtn">
+            👍 <span id="likeCount">0</span>
           </button>
 
-          <button onclick="downloadMovie('720p')">
-            HD 720p
+          <button class="action-btn" id="dislikeBtn">
+            👎 <span id="dislikeCount">0</span>
           </button>
 
-          <button onclick="downloadMovie('480p')">
-            480p
-          </button>
+          <div class="download-area">
+
+            <button class="action-btn" id="downloadBtn">
+              ⬇️ Download ▾
+            </button>
+
+            <div class="download-menu" id="downloadMenu">
+
+              <button onclick="downloadMovie('Auto')">
+                Download Auto
+              </button>
+
+              <button onclick="downloadMovie('720p')">
+                Download 720p
+              </button>
+
+              <button onclick="downloadMovie('480p')">
+                Download 480p
+              </button>
+
+            </div>
+
+          </div>
+
+          <select class="quality-select" id="qualitySelect">
+            <option value="auto">Auto</option>
+            <option value="1080p">1080p</option>
+            <option value="720p">720p</option>
+            <option value="480p">480p</option>
+          </select>
 
         </div>
 
-      </div>
-
-      <div class="quality-box">
-
-        <select id="qualitySelect">
-          <option value="auto">⚙ Auto</option>
-          <option value="1080p">1080p</option>
-          <option value="720p">720p</option>
-          <option value="480p">480p</option>
-        </select>
-
-      </div>
+      </section>
 
     </div>
 
-    <div class="details">
+  </main>
 
-      <div id="movieTitle" class="title"></div>
 
-      <div id="movieMeta" class="meta"></div>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const movieId = params.get("id");
 
-      <div id="movieDescription" class="description"></div>
+    const loading = document.getElementById("loading");
+    const moviePage = document.getElementById("moviePage");
+    const errorBox = document.getElementById("errorBox");
 
-    </div>
+    const video = document.getElementById("videoPlayer");
 
-  </div>
+    const playBtn = document.getElementById("playBtn");
+    const backBtn = document.getElementById("backBtn");
+    const forwardBtn = document.getElementById("forwardBtn");
+    const seekBar = document.getElementById("seekBar");
+    const timeText = document.getElementById("timeText");
+    const muteBtn = document.getElementById("muteBtn");
+    const fullscreenBtn = document.getElementById("fullscreenBtn");
+    const centerPlay = document.getElementById("centerPlay");
 
-  <div id="error" class="error" style="display:none;">
-    Movie load nahi ho payi.
-  </div>
+    let movieData = null;
 
-</main>
+    function formatTime(seconds) {
+      if (!Number.isFinite(seconds)) return "0:00";
 
-<script>
+      const minutes = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
 
-  const params = new URLSearchParams(location.search);
-  const movieId = params.get("id");
-
-  let movieData = null;
-
-  const loading = document.getElementById("loading");
-  const moviePage = document.getElementById("moviePage");
-  const errorBox = document.getElementById("error");
-
-  const video = document.getElementById("videoPlayer");
-
-  async function loadMovie() {
-
-    if (!movieId) {
-      showError();
-      return;
+      return `${minutes}:${secs.toString().padStart(2, "0")}`;
     }
 
-    try {
+    function togglePlay() {
+      if (video.paused) {
+        video.play().catch(error => {
+          console.error("Play error:", error);
+        });
+      } else {
+        video.pause();
+      }
+    }
 
-      const response =
-        await fetch(`/api/movies/${encodeURIComponent(movieId)}`);
+    playBtn.addEventListener("click", togglePlay);
+    centerPlay.addEventListener("click", togglePlay);
 
-      if (!response.ok) {
-        throw new Error("Movie not found");
+    video.addEventListener("play", () => {
+      playBtn.textContent = "⏸";
+      centerPlay.style.display = "none";
+    });
+
+    video.addEventListener("pause", () => {
+      playBtn.textContent = "▶";
+      centerPlay.style.display = "flex";
+    });
+
+    backBtn.addEventListener("click", () => {
+      video.currentTime = Math.max(
+        0,
+        video.currentTime - 10
+      );
+    });
+
+    forwardBtn.addEventListener("click", () => {
+      if (Number.isFinite(video.duration)) {
+        video.currentTime = Math.min(
+          video.duration,
+          video.currentTime + 10
+        );
+      }
+    });
+
+    video.addEventListener("timeupdate", () => {
+      if (video.duration) {
+        seekBar.value =
+          (video.currentTime / video.duration) * 100;
       }
 
-      movieData = await response.json();
+      timeText.textContent =
+        `${formatTime(video.currentTime)} / ${formatTime(video.duration)}`;
+    });
 
-      document.getElementById("movieTitle").textContent =
-        movieData.title || "Untitled Movie";
+    seekBar.addEventListener("input", () => {
+      if (video.duration) {
+        video.currentTime =
+          (seekBar.value / 100) * video.duration;
+      }
+    });
 
-      document.getElementById("movieMeta").textContent =
-        `${movieData.category || "Movie"} • ${movieData.year || ""}`;
+    video.addEventListener("loadedmetadata", () => {
+      timeText.textContent =
+        `0:00 / ${formatTime(video.duration)}`;
+    });
 
-      document.getElementById("movieDescription").textContent =
-        movieData.description || "No description available.";
+    muteBtn.addEventListener("click", () => {
+      video.muted = !video.muted;
 
-      video.src = movieData.videoUrl;
+      muteBtn.textContent =
+        video.muted ? "🔇" : "🔊";
+    });
 
-      document.getElementById("likeCount").textContent =
-        movieData.likes || 0;
+    fullscreenBtn.addEventListener("click", () => {
+      const player =
+        document.getElementById("namoPlayer");
 
-      document.getElementById("dislikeCount").textContent =
-        movieData.dislikes || 0;
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      } else if (player.requestFullscreen) {
+        player.requestFullscreen();
+      }
+    });
 
+
+    async function loadMovie() {
+      if (!movieId) {
+        showError();
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          `/api/movies/${encodeURIComponent(movieId)}`
+        );
+
+        if (!response.ok) {
+          throw new Error("Movie not found");
+        }
+
+        movieData = await response.json();
+
+        document.getElementById("movieTitle").textContent =
+          movieData.title || "Untitled Movie";
+
+        document.getElementById("movieMeta").textContent =
+          `${movieData.category || "Movie"} • ${movieData.year || ""}`;
+
+        document.getElementById("movieDescription").textContent =
+          movieData.description || "No description available.";
+
+        video.src = movieData.videoUrl;
+
+        document.getElementById("likeCount").textContent =
+          movieData.likes || 0;
+
+        document.getElementById("dislikeCount").textContent =
+          movieData.dislikes || 0;
+
+        loading.style.display = "none";
+        moviePage.style.display = "block";
+
+      } catch (error) {
+        console.error(error);
+        showError();
+      }
+    }
+
+    function showError() {
       loading.style.display = "none";
-      moviePage.style.display = "block";
-
-    } catch (error) {
-
-      console.error(error);
-      showError();
-
-    }
-  }
-
-  function showError() {
-
-    loading.style.display = "none";
-    moviePage.style.display = "none";
-    errorBox.style.display = "block";
-
-  }
-
-  // Download menu
-
-  document.getElementById("downloadBtn")
-    .addEventListener("click", function() {
-
-      const menu = document.getElementById("downloadMenu");
-
-      menu.style.display =
-        menu.style.display === "block"
-          ? "none"
-          : "block";
-
-    });
-
-  // Quality selector
-
-  document.getElementById("qualitySelect")
-    .addEventListener("change", function() {
-
-      const quality = this.value;
-
-      if (!movieData) return;
-
-      /*
-        Abhi backend mein ek hi video file hai.
-        Isliye Auto/current video hi play hoga.
-
-        Baad mein hum:
-        1080p
-        720p
-        480p
-        ki separate files connect karenge.
-      */
-
-      console.log("Selected quality:", quality);
-
-    });
-
-  // Like
-
-  // Like
-document.getElementById("likeBtn")
-  .addEventListener("click", async function() {
-
-    if (!movieData || !movieData.id) return;
-
-    const response = await fetch(
-      `/api/movies/${movieData.id}/like`,
-      { method: "POST" }
-    );
-
-    const data = await response.json();
-
-    if (response.ok) {
-      document.getElementById("likeCount").textContent =
-        data.likes;
-      this.classList.add("liked");
-    }
-  });
-
-
-// Dislike
-document.getElementById("dislikeBtn")
-  .addEventListener("click", async function() {
-
-    if (!movieData || !movieData.id) return;
-
-    const response = await fetch(
-      `/api/movies/${movieData.id}/dislike`,
-      { method: "POST" }
-    );
-
-    const data = await response.json();
-
-    if (response.ok) {
-      document.getElementById("dislikeCount").textContent =
-        data.dislikes;
-      this.classList.add("liked");
-    }
-  });
-
-    });
-
-  // Dislike
-
-  document.getElementById("dislikeBtn")
-    .addEventListener("click", function() {
-
-      this.classList.toggle("liked");
-
-    });
-
-  // Download
-
-  function downloadMovie(quality) {
-
-    if (!movieData || !movieData.videoUrl) {
-      return;
+      moviePage.style.display = "none";
+      errorBox.style.display = "block";
     }
 
-    /*
-      Filhaal original uploaded video download hoga.
-      Real 1080p/720p/480p downloads next step mein
-      separate files ke saath connect honge.
-    */
+    document.getElementById("likeBtn")
+      .addEventListener("click", async () => {
 
-    const link = document.createElement("a");
+        if (!movieData || !movieData.id) return;
 
-    link.href = movieData.videoUrl;
-    link.download =
-      `${movieData.title || "movie"}-${quality}`;
+        try {
+          const response = await fetch(
+            `/api/movies/${movieData.id}/like`,
+            { method: "POST" }
+          );
 
-    document.body.appendChild(link);
+          const data = await response.json();
 
-    link.click();
+          if (response.ok) {
+            document.getElementById("likeCount").textContent =
+              data.likes;
+          }
 
-    link.remove();
+        } catch (error) {
+          console.error("Like error:", error);
+        }
+      });
 
-    document.getElementById("downloadMenu")
-      .style.display = "none";
+    document.getElementById("dislikeBtn")
+      .addEventListener("click", async () => {
 
-  }
+        if (!movieData || !movieData.id) return;
 
-  loadMovie();
+        try {
+          const response = await fetch(
+            `/api/movies/${movieData.id}/dislike`,
+            { method: "POST" }
+          );
 
-</script>
+          const data = await response.json();
+
+          if (response.ok) {
+            document.getElementById("dislikeCount").textContent =
+              data.dislikes;
+          }
+
+        } catch (error) {
+          console.error("Dislike error:", error);
+        }
+      });
+
+
+    document.getElementById("downloadBtn")
+      .addEventListener("click", () => {
+
+        const menu =
+          document.getElementById("downloadMenu");
+
+        menu.style.display =
+          menu.style.display === "block"
+            ? "none"
+            : "block";
+      });
+
+    document.getElementById("qualitySelect")
+      .addEventListener("change", function () {
+
+        const quality = this.value;
+
+        if (!movieData) return;
+
+        console.log("Selected quality:", quality);
+
+        // अभी backend में एक ही video file है,
+        // इसलिए सभी options फिलहाल उसी video को use करेंगे.
+      });
+
+    function downloadMovie(quality) {
+
+      if (!movieData || !movieData.videoUrl) {
+        return;
+      }
+
+      const link = document.createElement("a");
+
+      link.href = movieData.videoUrl;
+      link.download =
+        `${movieData.title || "movie"}-${quality}`;
+
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      document.getElementById("downloadMenu")
+        .style.display = "none";
+    }
+
+    loadMovie();
+
+  </script>
 
 </body>
 </html>
