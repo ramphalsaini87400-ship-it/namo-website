@@ -239,9 +239,46 @@ app.post(
             const video =
                 req.files?.video?.[0];
 
-            if (!poster || !video) {
+            const videoUrlInput =
+                (req.body.videoUrl || "").trim();
+
+            if (!poster) {
                 return res.status(400).json({
-                    error: "Poster and video required"
+                    error: "Poster required"
+                });
+            }
+
+            let finalVideoUrl = "";
+
+            if (video) {
+                finalVideoUrl =
+                    "/uploads/videos/" +
+                    video.filename;
+            } else if (videoUrlInput) {
+
+                try {
+                    const parsed =
+                        new URL(videoUrlInput);
+
+                    if (
+                        parsed.protocol !== "http:" &&
+                        parsed.protocol !== "https:"
+                    ) {
+                        throw new Error();
+                    }
+
+                    finalVideoUrl =
+                        videoUrlInput;
+
+                } catch {
+                    return res.status(400).json({
+                        error: "Invalid video URL"
+                    });
+                }
+
+            } else {
+                return res.status(400).json({
+                    error: "Video file or video URL required"
                 });
             }
 
@@ -253,24 +290,28 @@ app.post(
                         .toString(36)
                         .substring(2, 8),
 
-                title: req.body.title || "Untitled",
+                title:
+                    req.body.title ||
+                    "Untitled",
 
                 category:
-                    req.body.category || "Movie",
+                    req.body.category ||
+                    "Movie",
 
                 year:
-                    req.body.year || "",
+                    req.body.year ||
+                    "",
 
                 description:
-                    req.body.description || "",
+                    req.body.description ||
+                    "",
 
                 posterUrl:
                     "/uploads/posters/" +
                     poster.filename,
 
                 videoUrl:
-                    "/uploads/videos/" +
-                    video.filename,
+                    finalVideoUrl,
 
                 createdAt:
                     new Date().toISOString()
