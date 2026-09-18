@@ -315,41 +315,38 @@ class="preview">
 
 
 <label>
-⬇️ 1080p Download Link
+🎥 Video
 </label>
 
 <input
-  type="url"
-  id="download1080"
-  placeholder="https://example.com/movie-1080p.mp4"
->
+type="file"
+id="video"
+accept="video/mp4,video/webm,video/ogg"
+required>
 
-
-<label>
-⬇️ 720p Download Link
-</label>
-
+<label>Video URL (optional)</label>
 <input
   type="url"
-  id="download720"
-  placeholder="https://example.com/movie-720p.mp4"
+  name="videoUrl"
+  placeholder="https://example.com/video.mp4"
 >
 
+<div class="form-group">
+  <label>Video URL</label>
+  <input
+    type="url"
+    id="videoUrl"
+    name="videoUrl"
+    placeholder="https://example.com/movie.mp4"
+  >
+  <small>या तो Video File चुनें या Video URL दें</small>
+</div>
 
-<label>
-⬇️ 480p Download Link
-</label>
+<div
+id="videoInfo"
+class="file-info">
+</div>
 
-<input
-  type="url"
-  id="download480"
-  placeholder="https://example.com/movie-480p.mp4"
->
-
-<p style="margin-top:10px;color:#666;font-size:13px;">
-Only add download links for movies/files you are legally
-allowed to distribute.
-</p>
 
 <div
 id="progressArea"
@@ -456,6 +453,38 @@ posterInput.addEventListener(
 
 
 // ===========================
+// VIDEO INFO
+// ===========================
+
+const videoInput =
+document.getElementById("video");
+
+const videoInfo =
+document.getElementById("videoInfo");
+
+
+videoInput.addEventListener(
+    "change",
+    function() {
+
+        const file =
+            this.files[0];
+
+        if (!file) {
+            videoInfo.textContent = "";
+            return;
+        }
+
+        const size =
+            file.size / 1024 / 1024;
+
+        videoInfo.textContent =
+            `Selected: ${file.name} • ${size.toFixed(2)} MB`;
+    }
+);
+
+
+// ===========================
 // UPLOAD
 // ===========================
 
@@ -489,14 +518,9 @@ function uploadMovie() {
     const poster =
         posterInput.files[0];
 
-    const download1080 =
-    document.getElementById("download1080").value.trim();
+    const video =
+        videoInput.files[0];
 
-const download720 =
-    document.getElementById("download720").value.trim();
-
-const download480 =
-    document.getElementById("download480").value.trim();
 
     if (!password) {
         alert("Admin password enter karo.");
@@ -510,6 +534,11 @@ const download480 =
 
     if (!poster) {
         alert("Poster select karo.");
+        return;
+    }
+
+    if (!video) {
+        alert("Video select karo.");
         return;
     }
 
@@ -543,19 +572,9 @@ const download480 =
     );
 
     formData.append(
-    "download1080",
-    download1080
-);
-
-formData.append(
-    "download720",
-    download720
-);
-
-formData.append(
-    "download480",
-    download480
-);
+        "video",
+        video
+    );
 
 
     const xhr =

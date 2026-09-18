@@ -392,6 +392,28 @@ id="editYear">
 <textarea
 id="editDescription"></textarea>
 
+<label>1080p Download Link</label>
+
+<input
+id="editDownload1080"
+type="url"
+placeholder="https://example.com/movie-1080p.mp4">
+
+
+<label>720p Download Link</label>
+
+<input
+id="editDownload720"
+type="url"
+placeholder="https://example.com/movie-720p.mp4">
+
+
+<label>480p Download Link</label>
+
+<input
+id="editDownload480"
+type="url"
+placeholder="https://example.com/movie-480p.mp4">
 
 <button
 class="edit"
@@ -643,6 +665,20 @@ async function loadMovies() {
                 movie.description ||
                 "No description";
 
+document.getElementById(
+    "editDownload1080"
+).value =
+    movie.download1080 || "";
+
+document.getElementById(
+    "editDownload720"
+).value =
+    movie.download720 || "";
+
+document.getElementById(
+    "editDownload480"
+).value =
+    movie.download480 || "";
 
             const actions =
                 document.createElement(
@@ -802,6 +838,40 @@ async function saveEdit() {
 
     };
 
+download1080:
+    document.getElementById(
+        "editDownload1080"
+    ).value.trim(),
+
+download720:
+    document.getElementById(
+        "editDownload720"
+    ).value.trim(),
+
+download480:
+    document.getElementById(
+        "editDownload480"
+    ).value.trim(),
+
+description:
+    document.getElementById(
+        "editDescription"
+    ).value,
+
+download1080:
+    document.getElementById(
+        "editDownload1080"
+    ).value.trim(),
+
+download720:
+    document.getElementById(
+        "editDownload720"
+    ).value.trim(),
+
+download480:
+    document.getElementById(
+        "editDownload480"
+    ).value.trim()
 
     try {
 

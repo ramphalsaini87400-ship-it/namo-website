@@ -215,21 +215,32 @@ app.get("/api/admin/check", requireAdmin, (req, res) => {
 // ADD MOVIE
 // =============================
 
-// =============================
-// ADD MOVIE
-// =============================
-
 app.post(
     "/api/movies",
     requireAdmin,
-    upload.single("poster"),
+    upload.fields([
+        {
+            name: "poster",
+            maxCount: 1
+        },
+        {
+            name: "video",
+            maxCount: 1
+        }
+    ]),
     (req, res) => {
 
         try {
-
             const movies = getMovies();
 
-            const poster = req.file;
+            const poster =
+                req.files?.poster?.[0];
+
+            const video =
+                req.files?.video?.[0];
+
+            const videoUrlInput =
+                (req.body.videoUrl || "").trim();
 
             if (!poster) {
                 return res.status(400).json({
@@ -237,61 +248,41 @@ app.post(
                 });
             }
 
-            const download1080 =
-                (req.body.download1080 || "").trim();
+            let finalVideoUrl = "";
 
-            const download720 =
-                (req.body.download720 || "").trim();
-
-            const download480 =
-                (req.body.download480 || "").trim();
-
-
-            function validUrl(value) {
-
-                if (!value) return true;
+            if (video) {
+                finalVideoUrl =
+                    "/uploads/videos/" +
+                    video.filename;
+            } else if (videoUrlInput) {
 
                 try {
-
                     const parsed =
-                        new URL(value);
+                        new URL(videoUrlInput);
 
-                    return (
-                        parsed.protocol === "http:" ||
-                        parsed.protocol === "https:"
-                    );
+                    if (
+                        parsed.protocol !== "http:" &&
+                        parsed.protocol !== "https:"
+                    ) {
+                        throw new Error();
+                    }
+
+                    finalVideoUrl =
+                        videoUrlInput;
 
                 } catch {
-
-                    return false;
+                    return res.status(400).json({
+                        error: "Invalid video URL"
+                    });
                 }
-            }
 
-
-            if (!validUrl(download1080) ||
-                !validUrl(download720) ||
-                !validUrl(download480)) {
-
+            } else {
                 return res.status(400).json({
-                    error: "Invalid download URL"
+                    error: "Video file or video URL required"
                 });
             }
-
-
-            if (
-                !download1080 &&
-                !download720 &&
-                !download480
-            ) {
-
-                return res.status(400).json({
-                    error: "At least one download link required"
-                });
-            }
-
 
             const movie = {
-
                 id:
                     Date.now().toString() +
                     "-" +
@@ -319,45 +310,32 @@ app.post(
                     "/uploads/posters/" +
                     poster.filename,
 
-                download1080:
-                    download1080,
-
-                download720:
-                    download720,
-
-                download480:
-                    download480,
-
-                likes: 0,
-
-                dislikes: 0,
+                videoUrl:
+                    finalVideoUrl,
 
                 createdAt:
                     new Date().toISOString()
             };
 
-
             movies.unshift(movie);
 
             saveMovies(movies);
-
 
             res.json({
                 success: true,
                 movie: movie
             });
 
-
         } catch (error) {
-
             console.error(error);
 
             res.status(500).json({
-                error: "Movie publish failed"
+                error: "Upload failed"
             });
         }
     }
 );
+
 
 // =============================
 // EDIT MOVIE
@@ -381,55 +359,17 @@ app.patch(
         }
 
         const allowedFields = [
-    "title",
-    "category",
-    "year",
-    "description",
-    "download1080",
-    "download720",
-    "download480"
-];
-
-                const downloadFields = [
-            "download1080",
-            "download720",
-            "download480"
-        ];
-
-        for (const field of downloadFields) {
-            if (typeof req.body[field] === "string") {
-                const value = req.body[field].trim();
-
-                if (value) {
-                    try {
-                        const parsed = new URL(value);
-
-                        if (
-                            parsed.protocol !== "http:" &&
-                            parsed.protocol !== "https:"
-                        ) {
-                            return res.status(400).json({
-                                error: "Invalid download URL"
-                            });
-                        }
-                    } catch {
-                        return res.status(400).json({
-                            error: "Invalid download URL"
-                        });
-                    }
-                }
-
-                movies[index][field] = value;
-            }
-        }
-
-        for (const field of [
             "title",
             "category",
             "year",
             "description"
-        ]) {
-            if (typeof req.body[field] === "string") {
+        ];
+
+        for (const field of allowedFields) {
+            if (
+                typeof req.body[field] ===
+                "string"
+            ) {
                 movies[index][field] =
                     req.body[field];
             }
@@ -495,6 +435,11 @@ app.delete(
         deleteStoredFile(
             movie.posterUrl,
             postersDir
+        );
+
+        deleteStoredFile(
+            movie.videoUrl,
+            videosDir
         );
 
         res.json({
