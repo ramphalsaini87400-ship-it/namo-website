@@ -1,16 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
-
-<title>NAMO - Upload Movie</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NAMO Admin Panel</title>
 
 <style>
-
 * {
     box-sizing: border-box;
 }
@@ -18,49 +13,44 @@ content="width=device-width, initial-scale=1.0">
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background: #f2f4f7;
-    color: #222;
-}
-
-header {
-    background: #0878d1;
-    padding: 15px 20px;
-    color: white;
+    background: #0b0b0b;
+    color: #fff;
 }
 
 .header {
-    max-width: 800px;
-    margin: auto;
-
+    background: #151515;
+    padding: 18px;
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #333;
 }
 
 .logo {
-    color: #ff9800;
-    font-size: 30px;
+    font-size: 25px;
     font-weight: bold;
+    color: #ff9800;
 }
 
-.home {
-    color: white;
+.header a {
+    color: #fff;
     text-decoration: none;
+    background: #252525;
+    padding: 9px 14px;
+    border-radius: 7px;
 }
 
 .container {
-    max-width: 800px;
-    margin: auto;
-    padding: 20px;
+    width: 94%;
+    max-width: 700px;
+    margin: 25px auto;
 }
 
-.box {
-    background: white;
+.card {
+    background: #151515;
     padding: 22px;
     border-radius: 12px;
-
-    box-shadow:
-        0 3px 15px rgba(0,0,0,.08);
+    border: 1px solid #292929;
 }
 
 h1 {
@@ -69,21 +59,21 @@ h1 {
 
 label {
     display: block;
+    margin-top: 18px;
+    margin-bottom: 7px;
     font-weight: bold;
-    margin-top: 15px;
 }
 
 input,
 textarea,
 select {
     width: 100%;
-    padding: 12px;
-    margin-top: 7px;
-
-    border: 1px solid #ddd;
+    padding: 13px;
+    background: #0d0d0d;
+    color: white;
+    border: 1px solid #444;
     border-radius: 7px;
-
-    font-size: 15px;
+    outline: none;
 }
 
 textarea {
@@ -91,425 +81,300 @@ textarea {
     resize: vertical;
 }
 
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #ff9800;
+}
+
 .preview {
-    margin-top: 12px;
     display: none;
-}
-
-.preview img {
-    width: 150px;
-    height: 210px;
-    object-fit: cover;
+    width: 160px;
+    margin-top: 12px;
     border-radius: 8px;
-}
-
-.file-info {
-    margin-top: 8px;
-    color: #666;
 }
 
 button {
     width: 100%;
-    margin-top: 20px;
-
+    margin-top: 25px;
     padding: 14px;
-
     border: 0;
     border-radius: 8px;
-
-    background: #0878d1;
-    color: white;
-
+    background: #ff9800;
+    color: #000;
     font-size: 16px;
     font-weight: bold;
-
     cursor: pointer;
 }
 
 button:disabled {
-    background: #999;
+    opacity: 0.6;
     cursor: not-allowed;
 }
 
-.progress-area {
-    display: none;
-    margin-top: 20px;
+.note {
+    margin-top: 15px;
+    padding: 12px;
+    background: #202020;
+    border-radius: 7px;
+    color: #bbb;
+    font-size: 14px;
+    line-height: 1.5;
 }
 
-.progress-bar {
+.progress {
+    display: none;
+    margin-top: 18px;
+}
+
+.progressBar {
     width: 100%;
-    height: 18px;
-
-    background: #ddd;
-    border-radius: 20px;
-
+    height: 10px;
+    background: #333;
+    border-radius: 10px;
     overflow: hidden;
 }
 
-.progress-fill {
+#progressFill {
     width: 0%;
     height: 100%;
-
-    background: #0878d1;
-
-    transition: width .2s;
+    background: #ff9800;
 }
 
-.progress-text {
-    text-align: center;
-    margin-top: 8px;
+#progressText {
+    margin-top: 7px;
+    color: #bbb;
+    font-size: 14px;
+}
+
+#message {
+    margin-top: 18px;
     font-weight: bold;
+    line-height: 1.5;
 }
 
-.message {
-    margin-top: 15px;
-    text-align: center;
-    font-weight: bold;
+.small {
+    color: #888;
+    font-size: 13px;
 }
-
-.back-dashboard {
-    display: block;
-    text-align: center;
-    margin-top: 15px;
-
-    color: #0878d1;
-    text-decoration: none;
-}
-
 </style>
-
 </head>
 
 <body>
 
-<header>
-
 <div class="header">
-
-<div class="logo">
-NAMO
+    <div class="logo">NAMO</div>
+    <a href="admin-dashboard.html">Dashboard</a>
 </div>
-
-<a href="admin-dashboard.html"
-class="home">
-Dashboard
-</a>
-
-</div>
-
-</header>
-
 
 <div class="container">
 
-<div class="box">
+<div class="card">
 
 <h1>🎬 Upload Movie</h1>
 
-<p>
-Upload only movies/videos that you own,
-have permission to distribute, or are
-otherwise legally licensed for distribution.
-</p>
+<div class="note">
+    केवल अपनी, licensed, authorized या public-domain movie/files के
+    legal download links इस्तेमाल करें।
+</div>
 
-
-<label>
-🔐 Admin Password
-</label>
-
+<label>Admin Password</label>
 <input
-type="password"
-id="password"
-placeholder="Admin password"
-required>
+    type="password"
+    id="password"
+    placeholder="Admin password"
+    autocomplete="current-password"
+>
 
-
-<label>
-🎬 Movie Name
-</label>
-
+<label>Movie Name</label>
 <input
-type="text"
-id="title"
-placeholder="Enter movie name"
-required>
+    type="text"
+    id="title"
+    placeholder="Movie name"
+>
 
-
-<label>
-📂 Category
-</label>
-
+<label>Category</label>
 <select id="category">
-
-<option value="Action">
-Action
-</option>
-
-<option value="Comedy">
-Comedy
-</option>
-
-<option value="Drama">
-Drama
-</option>
-
-<option value="Romance">
-Romance
-</option>
-
-<option value="Thriller">
-Thriller
-</option>
-
-<option value="Animation">
-Animation
-</option>
-
-<option value="Other">
-Other
-</option>
-
+    <option value="Movie">Movie</option>
+    <option value="Action">Action</option>
+    <option value="Comedy">Comedy</option>
+    <option value="Drama">Drama</option>
+    <option value="Romance">Romance</option>
+    <option value="Thriller">Thriller</option>
+    <option value="Animation">Animation</option>
+    <option value="Documentary">Documentary</option>
 </select>
 
-
-<label>
-📅 Release Year
-</label>
-
+<label>Release Year</label>
 <input
-type="number"
-id="year"
-placeholder="2026"
-min="1900"
-max="2100">
+    type="number"
+    id="year"
+    placeholder="2026"
+>
 
-
-<label>
-📝 Description
-</label>
-
+<label>Description</label>
 <textarea
-id="description"
-placeholder="Movie description">
-</textarea>
+    id="description"
+    placeholder="Movie description"
+></textarea>
 
-
-<label>
-🖼️ Poster
-</label>
-
+<label>Poster</label>
 <input
-type="file"
-id="poster"
-accept="image/*"
-required>
-
-
-<div
-id="posterPreview"
-class="preview">
-
-<img id="previewImage">
-
-</div>
-
-
-<label>
-⬇️ 1080p Download Link
-</label>
-
-<input
-  type="url"
-  id="download1080"
-  placeholder="https://example.com/movie-1080p.mp4"
+    type="file"
+    id="poster"
+    accept="image/*"
 >
 
+<img id="posterPreview" class="preview">
 
-<label>
-⬇️ 720p Download Link
-</label>
-
+<label>1080p Download Link</label>
 <input
-  type="url"
-  id="download720"
-  placeholder="https://example.com/movie-720p.mp4"
+    type="url"
+    id="download1080"
+    placeholder="https://example.com/movie-1080p.mp4"
 >
 
-
-<label>
-⬇️ 480p Download Link
-</label>
-
+<label>720p Download Link</label>
 <input
-  type="url"
-  id="download480"
-  placeholder="https://example.com/movie-480p.mp4"
+    type="url"
+    id="download720"
+    placeholder="https://example.com/movie-720p.mp4"
 >
 
-<p style="margin-top:10px;color:#666;font-size:13px;">
-Only add download links for movies/files you are legally
-allowed to distribute.
-</p>
+<label>480p Download Link</label>
+<input
+    type="url"
+    id="download480"
+    placeholder="https://example.com/movie-480p.mp4"
+>
 
-<div
-id="progressArea"
-class="progress-area">
-
-<div class="progress-bar">
-
-<div
-id="progressFill"
-class="progress-fill">
+<div class="small">
+    कम से कम एक legal download link देना जरूरी है।
 </div>
 
-</div>
+<div class="progress" id="progressArea">
 
-<div
-id="progressText"
-class="progress-text">
-0%
-</div>
+    <div class="progressBar">
+        <div id="progressFill"></div>
+    </div>
+
+    <div id="progressText">
+        Uploading 0%
+    </div>
 
 </div>
 
-
-<button
-id="uploadButton"
-onclick="uploadMovie()">
-
-🚀 Publish Movie
-
+<button id="uploadButton" onclick="uploadMovie()">
+    🚀 Publish Movie
 </button>
 
-
-<div
-id="message"
-class="message">
-</div>
-
-
-<a
-href="admin-dashboard.html"
-class="back-dashboard">
-
-← Back to Dashboard
-
-</a>
+<div id="message"></div>
 
 </div>
-
 </div>
-
 
 <script>
 
+const posterInput = document.getElementById("poster");
 
-// ===========================
-// POSTER PREVIEW
-// ===========================
+posterInput.addEventListener("change", function () {
 
-const posterInput =
-document.getElementById("poster");
+    const file = this.files[0];
 
-const preview =
-document.getElementById(
-    "posterPreview"
-);
+    const preview =
+        document.getElementById("posterPreview");
 
-const previewImage =
-document.getElementById(
-    "previewImage"
-);
-
-
-posterInput.addEventListener(
-    "change",
-    function() {
-
-        const file =
-            this.files[0];
-
-        if (!file) {
-            preview.style.display =
-                "none";
-            return;
-        }
-
-        if (!file.type.startsWith("image/")) {
-
-            alert(
-                "Please select an image."
-            );
-
-            this.value = "";
-
-            return;
-        }
-
-        previewImage.src =
-            URL.createObjectURL(file);
-
-        preview.style.display =
-            "block";
+    if (!file) {
+        preview.style.display = "none";
+        preview.removeAttribute("src");
+        return;
     }
-);
 
+    preview.src = URL.createObjectURL(file);
+    preview.style.display = "block";
+});
 
-// ===========================
-// UPLOAD
-// ===========================
 
 function uploadMovie() {
 
     const password =
-        document.getElementById(
-            "password"
-        ).value.trim();
+        document.getElementById("password").value.trim();
 
     const title =
-        document.getElementById(
-            "title"
-        ).value.trim();
+        document.getElementById("title").value.trim();
 
     const category =
-        document.getElementById(
-            "category"
-        ).value;
+        document.getElementById("category").value;
 
     const year =
-        document.getElementById(
-            "year"
-        ).value;
+        document.getElementById("year").value.trim();
 
     const description =
-        document.getElementById(
-            "description"
-        ).value.trim();
+        document.getElementById("description").value.trim();
 
     const poster =
         posterInput.files[0];
 
     const download1080 =
-    document.getElementById("download1080").value.trim();
+        document.getElementById("download1080").value.trim();
 
-const download720 =
-    document.getElementById("download720").value.trim();
+    const download720 =
+        document.getElementById("download720").value.trim();
 
-const download480 =
-    document.getElementById("download480").value.trim();
+    const download480 =
+        document.getElementById("download480").value.trim();
+
+    const button =
+        document.getElementById("uploadButton");
+
+    const message =
+        document.getElementById("message");
+
+    const progressArea =
+        document.getElementById("progressArea");
+
+    const progressFill =
+        document.getElementById("progressFill");
+
+    const progressText =
+        document.getElementById("progressText");
+
+
+    message.textContent = "";
+
 
     if (!password) {
-        alert("Admin password enter karo.");
+        message.textContent =
+            "❌ Admin password enter karo.";
+        message.style.color = "red";
         return;
     }
+
 
     if (!title) {
-        alert("Movie name enter karo.");
+        message.textContent =
+            "❌ Movie name enter karo.";
+        message.style.color = "red";
         return;
     }
 
+
     if (!poster) {
-        alert("Poster select karo.");
+        message.textContent =
+            "❌ Poster select karo.";
+        message.style.color = "red";
+        return;
+    }
+
+
+    if (
+        !download1080 &&
+        !download720 &&
+        !download480
+    ) {
+        message.textContent =
+            "❌ कम से कम एक download link enter karo.";
+        message.style.color = "red";
         return;
     }
 
@@ -543,49 +408,23 @@ const download480 =
     );
 
     formData.append(
-    "download1080",
-    download1080
-);
+        "download1080",
+        download1080
+    );
 
-formData.append(
-    "download720",
-    download720
-);
+    formData.append(
+        "download720",
+        download720
+    );
 
-formData.append(
-    "download480",
-    download480
-);
+    formData.append(
+        "download480",
+        download480
+    );
 
 
     const xhr =
         new XMLHttpRequest();
-
-
-    const button =
-        document.getElementById(
-            "uploadButton"
-        );
-
-    const progressArea =
-        document.getElementById(
-            "progressArea"
-        );
-
-    const progressFill =
-        document.getElementById(
-            "progressFill"
-        );
-
-    const progressText =
-        document.getElementById(
-            "progressText"
-        );
-
-    const message =
-        document.getElementById(
-            "message"
-        );
 
 
     button.disabled = true;
@@ -596,13 +435,17 @@ formData.append(
     progressArea.style.display =
         "block";
 
-    message.textContent =
-        "";
+    progressFill.style.width =
+        "0%";
+
+    progressText.textContent =
+        "Uploading 0%";
 
 
     xhr.open(
         "POST",
-        "/api/movies"
+        "/api/movies",
+        true
     );
 
 
@@ -614,33 +457,42 @@ formData.append(
 
     xhr.upload.addEventListener(
         "progress",
-        function(event) {
+        function (event) {
 
             if (event.lengthComputable) {
 
                 const percent =
                     Math.round(
                         (event.loaded /
-                        event.total) *
-                        100
+                        event.total) * 100
                     );
 
                 progressFill.style.width =
                     percent + "%";
 
                 progressText.textContent =
-                    `Uploading ${percent}%`;
+                    "Uploading " + percent + "%";
             }
         }
     );
 
 
-    xhr.onload = function() {
+    xhr.onload = function () {
 
         button.disabled = false;
 
         button.textContent =
             "🚀 Publish Movie";
+
+
+        let data = null;
+
+        try {
+            data =
+                JSON.parse(xhr.responseText);
+        } catch (e) {
+            data = null;
+        }
 
 
         if (
@@ -658,39 +510,28 @@ formData.append(
                 "✅ Movie successfully published!";
 
             message.style.color =
-                "green";
+                "#00d26a";
 
 
-            setTimeout(
-                function() {
+            setTimeout(function () {
 
-                    window.location.href =
-                        "admin-dashboard.html";
+                window.location.href =
+                    "admin-dashboard.html";
 
-                },
-                1200
-            );
+            }, 1200);
 
-        }
-
-        else {
+        } else {
 
             let error =
                 "Upload failed.";
 
-            try {
-
-                const data =
-                    JSON.parse(
-                        xhr.responseText
-                    );
-
-                if (data.error) {
-                    error =
-                        data.error;
-                }
-
-            } catch {}
+            if (
+                data &&
+                data.error
+            ) {
+                error =
+                    data.error;
+            }
 
             message.textContent =
                 "❌ " + error;
@@ -698,10 +539,11 @@ formData.append(
             message.style.color =
                 "red";
         }
+
     };
 
 
-    xhr.onerror = function() {
+    xhr.onerror = function () {
 
         button.disabled = false;
 
@@ -716,12 +558,25 @@ formData.append(
     };
 
 
-    xhr.send(formData);
+    xhr.ontimeout = function () {
 
+        button.disabled = false;
+
+        button.textContent =
+            "🚀 Publish Movie";
+
+        message.textContent =
+            "❌ Request timeout.";
+
+        message.style.color =
+            "red";
+    };
+
+
+    xhr.send(formData);
 }
 
 </script>
 
 </body>
-
 </html>
