@@ -170,6 +170,37 @@
                 font-size: 15px;
             }
         }
+
+footer {
+    margin-top: 40px;
+    padding: 25px 15px;
+    background: #075f91;
+    color: white;
+    text-align: center;
+}
+
+.footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.footer-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.footer-links a:hover {
+    text-decoration: underline;
+}
+
+footer p {
+    margin: 0;
+    font-size: 13px;
+}
     </style>
     <link rel="icon" type="image/png" href="/favicon.png">
 </head>
@@ -439,6 +470,18 @@ document
 loadMovies();
 
 </script>
+
+<footer>
+    <div class="footer-links">
+        <a href="/about.html">About Us</a>
+        <a href="/contact.html">Contact Us</a>
+        <a href="/privacy.html">Privacy Policy</a>
+        <a href="/terms.html">Terms & Conditions</a>
+        <a href="/dmca.html">DMCA / Copyright</a>
+    </div>
+
+    <p>© 2026 NAMO Movies. All rights reserved.</p>
+</footer>
 
 </body>
 </html>
