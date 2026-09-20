@@ -576,5 +576,95 @@ function uploadMovie() {
 
 </script>
 
+
+<section id="moviesSection" style="max-width:900px;margin:30px auto;padding:20px;background:#151515;border-radius:16px;">
+    <h2 style="margin-top:0;">🎬 Published Movies</h2>
+    <div id="moviesList">
+        Movies loading...
+    </div>
+</section>
+
+<script>
+async function loadMoviesForAdmin() {
+    const list = document.getElementById("moviesList");
+
+    try {
+        const response = await fetch("/api/movies");
+        const movies = await response.json();
+
+        if (!movies.length) {
+            list.innerHTML = "<p>No movies published yet.</p>";
+            return;
+        }
+
+        list.innerHTML = movies.map(movie => `
+            <div style="display:flex;align-items:center;gap:15px;padding:12px 0;border-bottom:1px solid #333;">
+                <img src="${movie.posterUrl || ""}"
+                     style="width:70px;height:90px;object-fit:cover;border-radius:8px;">
+                <div style="flex:1;">
+                    <strong>${escapeAdminText(movie.title)}</strong>
+                    <div style="font-size:13px;color:#aaa;">
+                        ${escapeAdminText(movie.category || "")} • ${escapeAdminText(movie.year || "")}
+                    </div>
+                </div>
+                <button
+                    onclick="deleteMovie('${movie.id}')"
+                    style="background:#d32f2f;color:white;border:0;padding:10px 14px;border-radius:8px;cursor:pointer;">
+                    🗑️ Delete
+                </button>
+            </div>
+        `).join("");
+
+    } catch (error) {
+        list.innerHTML = "<p style='color:red;'>Movies load nahi ho paayi.</p>";
+    }
+}
+
+function escapeAdminText(value) {
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+async function deleteMovie(id) {
+    const password = document.getElementById("password").value.trim();
+
+    if (!password) {
+        alert("Pehle Admin Password enter karo.");
+        return;
+    }
+
+    if (!confirm("Kya tum is movie ko delete karna chahte ho?")) {
+        return;
+    }
+
+    try {
+        const response = await fetch("/api/movies/" + encodeURIComponent(id), {
+            method: "DELETE",
+            headers: {
+                "x-admin-password": password
+            }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "Delete failed");
+        }
+
+        alert("Movie successfully deleted.");
+        loadMoviesForAdmin();
+
+    } catch (error) {
+        alert("❌ " + error.message);
+    }
+}
+
+loadMoviesForAdmin();
+</script>
+
 </body>
 </html>
