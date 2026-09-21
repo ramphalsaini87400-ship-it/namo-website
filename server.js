@@ -3,6 +3,14 @@ const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
 
+const {
+    initDatabase,
+    getMoviesFromDatabase,
+    saveMovieToDatabase,
+    deleteMovieFromDatabase,
+    migrateMoviesOnce
+} = require("./db");
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -125,80 +133,103 @@ const upload = multer({
 // PUBLIC API
 // =============================
 
-app.get("/api/movies", (req, res) => {
-    res.json(getMovies());
-});
+app.get("/api/movies", async (req, res) => {
+    try {
+        const movies = await getMoviesFromDatabase();
 
-app.get("/api/movies/:id", (req, res) => {
-    const movies = getMovies();
+        res.json(movies);
+    } catch (error) {
+        console.error("Get movies error:", error);
 
-    const movie = movies.find(
-        m => m.id === req.params.id
-    );
-
-    if (!movie) {
-        return res.status(404).json({
-            error: "Movie not found"
+        res.status(500).json({
+            error: "Movies load failed"
         });
     }
+});
 
-    res.json(movie);
+app.get("/api/movies/:id", async (req, res) => {
+    try {
+        const movies = await getMoviesFromDatabase();
+
+        const movie = movies.find(
+            m => m.id === req.params.id
+        );
+
+        if (!movie) {
+            return res.status(404).json({
+                error: "Movie not found"
+            });
+        }
+
+        res.json(movie);
+    } catch (error) {
+        console.error("Get movie error:", error);
+
+        res.status(500).json({
+            error: "Movie load failed"
+        });
+    }
 });
 
 // =============================
 // LIKE / DISLIKE API
 // =============================
 
-app.post("/api/movies/:id/like", (req, res) => {
-    const movies = getMovies();
+app.post("/api/movies/:id/like", async (req, res) => {
+    try {
+        const movies = await getMoviesFromDatabase();
+        const movie = movies.find(m => m.id === req.params.id);
 
-    const index = movies.findIndex(
-        m => m.id === req.params.id
-    );
+        if (!movie) {
+            return res.status(404).json({
+                error: "Movie not found"
+            });
+        }
 
-    if (index === -1) {
-        return res.status(404).json({
-            error: "Movie not found"
+        movie.likes = (Number(movie.likes) || 0) + 1;
+
+        await saveMovieToDatabase(movie);
+
+        res.json({
+            likes: movie.likes
+        });
+    } catch (error) {
+        console.error("Like error:", error);
+
+        res.status(500).json({
+            error: "Like failed"
         });
     }
-
-    movies[index].likes =
-        Number(movies[index].likes) || 0;
-
-    movies[index].likes++;
-
-    saveMovies(movies);
-
-    res.json({
-        likes: movies[index].likes
-    });
 });
 
 
-app.post("/api/movies/:id/dislike", (req, res) => {
-    const movies = getMovies();
+app.post("/api/movies/:id/dislike", async (req, res) => {
+    try {
+        const movies = await getMoviesFromDatabase();
+        const movie = movies.find(m => m.id === req.params.id);
 
-    const index = movies.findIndex(
-        m => m.id === req.params.id
-    );
+        if (!movie) {
+            return res.status(404).json({
+                error: "Movie not found"
+            });
+        }
 
-    if (index === -1) {
-        return res.status(404).json({
-            error: "Movie not found"
+        movie.dislikes = (Number(movie.dislikes) || 0) + 1;
+
+        await saveMovieToDatabase(movie);
+
+        res.json({
+            dislikes: movie.dislikes
+        });
+    } catch (error) {
+        console.error("Dislike error:", error);
+
+        res.status(500).json({
+            error: "Dislike failed"
         });
     }
-
-    movies[index].dislikes =
-        Number(movies[index].dislikes) || 0;
-
-    movies[index].dislikes++;
-
-    saveMovies(movies);
-
-    res.json({
-        dislikes: movies[index].dislikes
-    });
 });
+
 
 // =============================
 // ADMIN LOGIN CHECK
@@ -227,7 +258,6 @@ app.post(
 
         try {
 
-            const movies = getMovies();
 
             const poster = req.file;
 
@@ -339,7 +369,6 @@ app.post(
 
             movies.unshift(movie);
 
-            saveMovies(movies);
 
 
             res.json({
@@ -366,86 +395,82 @@ app.post(
 app.patch(
     "/api/movies/:id",
     requireAdmin,
-    (req, res) => {
+    async (req, res) => {
+        try {
+            const movies = await getMoviesFromDatabase();
 
-        const movies = getMovies();
+            const index = movies.findIndex(
+                m => m.id === req.params.id
+            );
 
-        const index = movies.findIndex(
-            m => m.id === req.params.id
-        );
+            if (index === -1) {
+                return res.status(404).json({
+                    error: "Movie not found"
+                });
+            }
 
-        if (index === -1) {
-            return res.status(404).json({
-                error: "Movie not found"
-            });
-        }
+            const movie = movies[index];
 
-        const allowedFields = [
-    "title",
-    "category",
-    "year",
-    "description",
-    "download1080",
-    "download720",
-    "download480"
-];
+            const downloadFields = [
+                "download1080",
+                "download720",
+                "download480"
+            ];
 
-                const downloadFields = [
-            "download1080",
-            "download720",
-            "download480"
-        ];
+            for (const field of downloadFields) {
+                if (typeof req.body[field] === "string") {
+                    const value = req.body[field].trim();
 
-        for (const field of downloadFields) {
-            if (typeof req.body[field] === "string") {
-                const value = req.body[field].trim();
+                    if (value) {
+                        try {
+                            const parsed = new URL(value);
 
-                if (value) {
-                    try {
-                        const parsed = new URL(value);
-
-                        if (
-                            parsed.protocol !== "http:" &&
-                            parsed.protocol !== "https:"
-                        ) {
+                            if (
+                                parsed.protocol !== "http:" &&
+                                parsed.protocol !== "https:"
+                            ) {
+                                return res.status(400).json({
+                                    error: "Invalid download URL"
+                                });
+                            }
+                        } catch {
                             return res.status(400).json({
                                 error: "Invalid download URL"
                             });
                         }
-                    } catch {
-                        return res.status(400).json({
-                            error: "Invalid download URL"
-                        });
                     }
+
+                    movie[field] = value;
                 }
-
-                movies[index][field] = value;
             }
-        }
 
-        for (const field of [
-            "title",
-            "category",
-            "year",
-            "description"
-        ]) {
-            if (typeof req.body[field] === "string") {
-                movies[index][field] =
-                    req.body[field];
+            for (const field of [
+                "title",
+                "category",
+                "year",
+                "description"
+            ]) {
+                if (typeof req.body[field] === "string") {
+                    movie[field] = req.body[field];
+                }
             }
+
+            await saveMovieToDatabase(movie);
+
+            res.json({
+                success: true,
+                movie: movie
+            });
+        } catch (error) {
+            console.error("Update movie error:", error);
+
+            res.status(500).json({
+                error: "Movie update failed"
+            });
         }
-
-        saveMovies(movies);
-
-        res.json({
-            success: true,
-            movie: movies[index]
-        });
     }
 );
 
-
-// =============================
 // DELETE MOVIE
 // =============================
 
@@ -472,40 +497,41 @@ function deleteStoredFile(fileUrl, folder) {
 app.delete(
     "/api/movies/:id",
     requireAdmin,
-    (req, res) => {
+    async (req, res) => {
+        try {
+            const movies = await getMoviesFromDatabase();
 
-        const movies = getMovies();
+            const movie = movies.find(
+                m => m.id === req.params.id
+            );
 
-        const index = movies.findIndex(
-            m => m.id === req.params.id
-        );
+            if (!movie) {
+                return res.status(404).json({
+                    error: "Movie not found"
+                });
+            }
 
-        if (index === -1) {
-            return res.status(404).json({
-                error: "Movie not found"
+            await deleteMovieFromDatabase(req.params.id);
+
+            deleteStoredFile(
+                movie.posterUrl,
+                postersDir
+            );
+
+            res.json({
+                success: true,
+                message: "Movie deleted"
+            });
+        } catch (error) {
+            console.error("Delete movie error:", error);
+
+            res.status(500).json({
+                error: "Movie delete failed"
             });
         }
-
-        const movie = movies[index];
-
-        movies.splice(index, 1);
-
-        saveMovies(movies);
-
-        deleteStoredFile(
-            movie.posterUrl,
-            postersDir
-        );
-
-        res.json({
-            success: true,
-            message: "Movie deleted"
-        });
     }
 );
 
-
-// =============================
 // ERROR HANDLER
 // =============================
 
@@ -530,8 +556,20 @@ app.use((err, req, res, next) => {
 // START SERVER
 // =============================
 
-app.listen(PORT, () => {
-    console.log(
-        `NAMO server running at http://localhost:${PORT}`
-    );
-});
+async function startServer() {
+    try {
+        await initDatabase();
+        await migrateMoviesOnce();
+
+        app.listen(PORT, () => {
+            console.log(
+                `NAMO server running at http://localhost:${PORT}`
+            );
+        });
+    } catch (error) {
+        console.error("Database startup failed:", error);
+        process.exit(1);
+    }
+}
+
+startServer();
