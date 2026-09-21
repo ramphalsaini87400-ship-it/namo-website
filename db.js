@@ -2,14 +2,37 @@ const { Pool } = require("pg");
 const fs = require("fs");
 const path = require("path");
 
+const moviesFile = path.join(__dirname, "movies.json");
+
+const databaseUrl = process.env.DATABASE_URL;
+
+if (!databaseUrl) {
+    throw new Error(
+        "DATABASE_URL is missing in Render runtime environment."
+    );
+}
+
+let parsedUrl;
+
+try {
+    parsedUrl = new URL(databaseUrl);
+} catch {
+    throw new Error(
+        "DATABASE_URL exists but is not a valid PostgreSQL URL."
+    );
+}
+
+console.log(
+    `Database config loaded: ${parsedUrl.protocol}//${parsedUrl.hostname}:${parsedUrl.port || 5432}`
+);
+
 const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
+    connectionString: databaseUrl,
     ssl: {
         rejectUnauthorized: false
-    }
+    },
+    connectionTimeoutMillis: 10000
 });
-
-const moviesFile = path.join(__dirname, "movies.json");
 
 async function initDatabase() {
     await pool.query(`
