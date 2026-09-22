@@ -254,7 +254,7 @@ app.post(
     "/api/movies",
     requireAdmin,
     upload.single("poster"),
-    (req, res) => {
+    async (req, res) => {
 
         try {
 
@@ -367,7 +367,7 @@ app.post(
             };
 
 
-            movies.unshift(movie);
+            await saveMovieToDatabase(movie);
 
 
 
