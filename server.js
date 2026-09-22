@@ -448,7 +448,8 @@ app.patch(
                 "title",
                 "category",
                 "year",
-                "description"
+                "description",
+                "posterUrl"
             ]) {
                 if (typeof req.body[field] === "string") {
                     movie[field] = req.body[field];
