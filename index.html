@@ -433,17 +433,20 @@ function showMovies() {
         moviesBox.appendChild(card);
 
         if ((moviesBox.querySelectorAll(".movie").length % 6) === 0) {
-            moviesBox.insertAdjacentHTML("beforeend", `<div class="ad-container">
-<ins class="adsbygoogle"
-style="display:block"
-data-ad-client="ca-pub-1256287234546835"
-data-ad-slot="9222850445"
-data-ad-format="auto"
-data-full-width-responsive="true"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-</div>`);
+            const adContainer = document.createElement("div");
+            adContainer.className = "ad-container";
+
+            adContainer.innerHTML = `
+                <ins class="adsbygoogle"
+                    style="display:block"
+                    data-ad-client="ca-pub-1256287234546835"
+                    data-ad-slot="9222850445"
+                    data-ad-format="auto"
+                    data-full-width-responsive="true"></ins>
+            `;
+
+            moviesBox.appendChild(adContainer);
+            (adsbygoogle = window.adsbygoogle || []).push({});
         }
 
     });
