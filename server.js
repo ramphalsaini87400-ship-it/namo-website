@@ -54,6 +54,47 @@ function saveMovies(movies) {
     );
 }
 
+async function uploadPosterToGitHub(file) {
+    if (!process.env.GITHUB_TOKEN) {
+        throw new Error("GITHUB_TOKEN is not configured");
+    }
+
+    const repoOwner = "ramphalsaini87400-ship-it";
+    const repoName = "namo-website";
+    const branch = "main";
+
+    const fileName = path.basename(file.filename);
+    const filePath = path.join(postersDir, fileName);
+
+    const fileData = await fs.promises.readFile(filePath);
+    const base64Content = fileData.toString("base64");
+
+    const response = await fetch(
+        `https://api.github.com/repos/${repoOwner}/${repoName}/contents/uploads/posters/${encodeURIComponent(fileName)}`,
+        {
+            method: "PUT",
+            headers: {
+                "Authorization": `Bearer ${process.env.GITHUB_TOKEN}`,
+                "Accept": "application/vnd.github+json",
+                "X-GitHub-Api-Version": "2022-11-28",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                message: `Add movie poster ${fileName}`,
+                content: base64Content,
+                branch: branch
+            })
+        }
+    );
+
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`GitHub upload failed: ${response.status} ${errorText}`);
+    }
+
+    return `https://raw.githubusercontent.com/${repoOwner}/${repoName}/${branch}/uploads/posters/${encodeURIComponent(fileName)}`;
+}
+
 function requireAdmin(req, res, next) {
     const password = req.get("x-admin-password");
 
@@ -320,6 +361,7 @@ app.post(
             }
 
 
+            const permanentPosterUrl = await uploadPosterToGitHub(poster);
             const movie = {
 
                 id:
@@ -345,9 +387,7 @@ app.post(
                     req.body.description ||
                     "",
 
-                posterUrl:
-                    "/uploads/posters/" +
-                    poster.filename,
+                posterUrl: permanentPosterUrl,
 
                 download1080:
                     download1080,
@@ -457,6 +497,10 @@ app.patch(
             }
 
             await saveMovieToDatabase(movie);
+
+            await fs.promises
+                .unlink(path.join(postersDir, poster.filename))
+                .catch(() => {});
 
             res.json({
                 success: true,
