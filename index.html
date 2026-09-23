@@ -204,6 +204,7 @@ footer p {
 }
     </style>
     <link rel="icon" type="image/png" href="/favicon.png">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1256287234546835" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -269,18 +270,7 @@ footer p {
         Loading movies...
     </div>
 
-    <div class="ad-container">
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1256287234546835" crossorigin="anonymous"></script>
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-1256287234546835"
-     data-ad-slot="9222850445"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-</div>
+    
 
 <div id="movies"></div>
 
@@ -441,6 +431,20 @@ function showMovies() {
         card.appendChild(info);
 
         moviesBox.appendChild(card);
+
+        if ((moviesBox.querySelectorAll(".movie").length % 6) === 0) {
+            moviesBox.insertAdjacentHTML("beforeend", `<div class="ad-container">
+<ins class="adsbygoogle"
+style="display:block"
+data-ad-client="ca-pub-1256287234546835"
+data-ad-slot="9222850445"
+data-ad-format="auto"
+data-full-width-responsive="true"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</div>`);
+        }
 
     });
 }
