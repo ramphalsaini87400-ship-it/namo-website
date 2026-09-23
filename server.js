@@ -422,7 +422,7 @@ app.post(
             console.error(error);
 
             res.status(500).json({
-                error: "Movie publish failed"
+                error: "Movie publish failed: " + error.message
             });
         }
     }
